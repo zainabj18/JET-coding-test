@@ -32,16 +32,28 @@ def print_restaurant_data(postcode):
     
     #if restaurants exists, print data
     if restaurants:
+        
         #only fetching the firts 10 
         for restaurant in restaurants[:10]:  
             #extracting the 4 restaurants data points 
-            name = restaurant.get('name', 'N/A')
-            cuisines = restaurant.get('cuisines', 'N/A')
-            rating = restaurant.get('rating', 'N/A')
-            address = restaurant.get('address', 'N/A')
+            restaurant_name = restaurant.get('name', 'Name not found')   
+            
+            #getting the list of cuisines and extracting the names of cuisines into a list
+            cuisine_data = restaurant.get('cuisines', [])
+            #using .join for better readability 
+            cuisine = ', '.join(cuisine['name'] for cuisine in cuisine_data) if cuisine_data else 'Cuisine not found.'
+            
+            
+            #extracting the rating 
+            rating_info = restaurant.get('rating', {})
+            rating = f"{rating_info.get('starRating', 'Rating not found.')} ({rating_info.get('count', 0)} reviews)"
+            
+            #extracting the address 
+            address_info = restaurant.get('address', {})
+            address = f"{address_info.get('firstLine', 'Address not found.')}, {address_info.get('city', 'City not found.')}, {address_info.get('postalCode', 'Post code not found.')}"
 
-            print(f"Name: {name}")
-            print(f"Cuisines: {cuisines}")
+            print(f"Name: {restaurant_name}")
+            print(f"Cuisines: {cuisine}")
             print(f"Rating: {rating}")
             print(f"Address: {address}\n")
     else:
