@@ -1,6 +1,7 @@
 
 # module to make HTTP requests with 
 import requests
+import random
 
 # fetching restaurant data using a postcode 
 def get_restaurants(postcode):
@@ -8,6 +9,7 @@ def get_restaurants(postcode):
     
     #necessary HTTP header to avoid 403 forbidden error 
     user_agent_header = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'}
+    
     
     #GET request to the API
     api_response = requests.get(restaurant_url, headers=user_agent_header)
@@ -21,11 +23,10 @@ def get_restaurants(postcode):
         #if unable to fetch restaurants data, prints the error code 
         print(f"Error retrieving restaurant data: {api_response.status_code}")
         return []
-
-
+    
 
 #printing the restaurant details 
-def print_restaurant_data(postcode):
+def print_restaurant_data(postcode, sort_by):
     #getting the restaurant data 
     restaurants = get_restaurants(postcode)
     
@@ -43,7 +44,13 @@ def print_restaurant_data(postcode):
                                     for food_keyword in restaurant_focused_keywords
                                     )
                                 ]
-        
+        #sorting and displaying as user's choice 
+        if sort_by == "rating":
+            restaurants_filtered.sort(key=lambda x: x.get('rating', {}).get('starRating', 0), reverse=True)
+        elif sort_by == "random":
+            random.shuffle(restaurants_filtered)
+            
+            
         #only fetching the firts 10 
         for restaurant in restaurants_filtered[:10]:  
             #extracting the 4 restaurants data points 
@@ -62,7 +69,7 @@ def print_restaurant_data(postcode):
             address_info = restaurant.get('address', {})
             address = f"{address_info.get('firstLine', 'Address not found.')}, {address_info.get('city', 'City not found.')}, {address_info.get('postalCode', 'Post code not found.')}"
 
-            print('\033[1m' + 'Name: ' + '\033[0m' + f"{restaurant_name}")
+            print(f'\033[1m' + 'Name: ' + '\033[0m' + f"{restaurant_name}")
             print('\033[1m' + 'Cuisines: ' + '\033[0m' + f"{cuisine}")
             print('\033[1m' + 'Rating: ' + '\033[0m' + f"{rating}")
             print('\033[1m' + 'Address: ' + '\033[0m' + f"{address}\n")
@@ -72,4 +79,9 @@ def print_restaurant_data(postcode):
 if __name__ == '__main__':
     #user inputs postcode 
     postcode = input("Enter a UK postcode: ")
-    print_restaurant_data(postcode)
+    sort_by_choice = input("Would you like to sort the restaurants by rating or random? Enter '1' for rating or '2' for random: ").strip().lower()
+    if sort_by_choice == "1":
+        sort_by = "rating"
+    elif sort_by_choice == "2":
+        sort_by = "random"
+    print_restaurant_data(postcode, sort_by)
