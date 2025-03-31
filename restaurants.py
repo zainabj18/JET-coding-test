@@ -23,7 +23,6 @@ def get_restaurants(postcode):
         #if unable to fetch restaurants data, prints the error code 
         print(f"Error retrieving restaurant data: {api_response.status_code}")
         return []
-    
 
 #printing the restaurant details 
 def print_restaurant_data(postcode, sort_by):
@@ -49,6 +48,10 @@ def print_restaurant_data(postcode, sort_by):
             restaurants_filtered.sort(key=lambda x: x.get('rating', {}).get('starRating', 0), reverse=True)
         elif sort_by == "random":
             random.shuffle(restaurants_filtered)
+            
+        print("\n" + "*" * 50)
+        print(" \033[1mTOP 10 RESTAURANTS: \033[0m")
+        print("*" * 50 + "\n")
             
             
         #only fetching the firts 10 
