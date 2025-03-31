@@ -47,6 +47,7 @@ This script uses the built-in `requests` module. If it's not installed, run:
 - **Better Filtering**: A more advanced approach (e.g., checking multiple fields instead of just cuisine keywords) could improve accuracy.
 - **GUI/Web Interface**: A graphical user interface or web app would make the output more user-friendly.
 - **More Sorting Options**: Allow users to sort by distance, popularity, or other factors.
+- **Even more and advanved error handling**
 
 ## Author
 - **Zainab Jaffar**
