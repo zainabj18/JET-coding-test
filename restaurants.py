@@ -19,8 +19,9 @@ def get_restaurants(postcode):
         return restuarant_data.get('restaurants', [])
     else:
         #if unable to fetch restaurants data, prints the error code 
-        print(f"Error retrieving restuarant data: {api_response.status_code}")
+        print(f"Error retrieving restaurant data: {api_response.status_code}")
         return []
+
 
 
 #printing the restaurant details 
@@ -31,8 +32,20 @@ def print_restaurant_data(postcode):
     #if restaurants exists, print data
     if restaurants:
         
+        #filtering to focus on restaurant data only
+        restaurant_focused_keywords = ['Food', 'Drink', 'Dessert', 'Bakery', 'Breakfast', 'Sandwiches', 'Restaurant', 'Pizza', 'Burger', 'Sushi', 'Cafe', 'Bar', 'Grill', 'Italian', 'Kebab']
+        #looping through the restaurants list and checking if food related words are found 
+        restaurants_filtered = [ restaurant for restaurant in restaurants
+                                if any(
+                                    #comparing the food keywords 
+                                    food_keyword.lower() in cuisine['name'].lower()
+                                    for cuisine in restaurant.get('cuisines', [])
+                                    for food_keyword in restaurant_focused_keywords
+                                    )
+                                ]
+        
         #only fetching the firts 10 
-        for restaurant in restaurants[:10]:  
+        for restaurant in restaurants_filtered[:10]:  
             #extracting the 4 restaurants data points 
             restaurant_name = restaurant.get('name', 'Name not found')   
             
@@ -40,7 +53,6 @@ def print_restaurant_data(postcode):
             cuisine_data = restaurant.get('cuisines', [])
             #using .join for better readability 
             cuisine = ', '.join(cuisine['name'] for cuisine in cuisine_data) if cuisine_data else 'Cuisine not found.'
-            
             
             #extracting the rating 
             rating_info = restaurant.get('rating', {})
