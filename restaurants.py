@@ -2,7 +2,6 @@
 # module to make HTTP requests with 
 import requests
 
-
 # fetching restaurant data using a postcode 
 def get_restaurants(postcode):
     restaurant_url = f"https://uk.api.just-eat.io/discovery/uk/restaurants/enriched/bypostcode/{postcode}"
@@ -12,7 +11,6 @@ def get_restaurants(postcode):
     
     #GET request to the API
     api_response = requests.get(restaurant_url, headers=user_agent_header)
-    
     
     #checking if the HTTPS response code is OK 200 (successful request)
     if api_response.status_code == 200:
@@ -52,10 +50,10 @@ def print_restaurant_data(postcode):
             address_info = restaurant.get('address', {})
             address = f"{address_info.get('firstLine', 'Address not found.')}, {address_info.get('city', 'City not found.')}, {address_info.get('postalCode', 'Post code not found.')}"
 
-            print(f"Name: {restaurant_name}")
-            print(f"Cuisines: {cuisine}")
-            print(f"Rating: {rating}")
-            print(f"Address: {address}\n")
+            print('\033[1m' + 'Name: ' + '\033[0m' + f"{restaurant_name}")
+            print('\033[1m' + 'Cuisines: ' + '\033[0m' + f"{cuisine}")
+            print('\033[1m' + 'Rating: ' + '\033[0m' + f"{rating}")
+            print('\033[1m' + 'Address: ' + '\033[0m' + f"{address}\n")
     else:
         print(f"No restaurants found.")
 
